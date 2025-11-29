@@ -1,0 +1,115 @@
+[
+    {
+      "id": "alert_001",
+      "timestamp": "2025-11-14T14:23:45Z",
+      "source_ip": "203.0.113.42",
+      "destination_ip": "10.0.1.15",
+      "alert_type": "Port Scan",
+      "severity": "medium",
+      "description": "Multiple port scan detected from external IP",
+      "details": {
+        "ports_scanned": [22, 80, 443, 3306, 5432, 8080, 27017],
+        "scan_rate": "47 ports/second",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "id": "alert_002",
+      "timestamp": "2025-11-14T14:24:12Z",
+      "source_ip": "203.0.113.42",
+      "destination_ip": "10.0.1.15",
+      "alert_type": "SSH Brute Force",
+      "severity": "high",
+      "description": "Multiple failed SSH authentication attempts",
+      "details": {
+        "failed_attempts": 156,
+        "timeframe": "2 minutes",
+        "usernames_tried": ["root", "admin", "user", "test", "ubuntu"]
+      }
+    },
+    {
+      "id": "alert_003",
+      "timestamp": "2025-11-14T14:26:33Z",
+      "source_ip": "10.0.1.15",
+      "destination_ip": "10.0.2.50",
+      "alert_type": "Lateral Movement",
+      "severity": "critical",
+      "description": "Suspicious internal network reconnaissance after successful SSH login",
+      "details": {
+        "successful_login": "user: deploy",
+        "subsequent_actions": ["network scan", "service enumeration", "credential access attempt"],
+        "internal_ips_scanned": 23
+      }
+    },
+    {
+      "id": "alert_004",
+      "timestamp": "2025-11-14T14:28:01Z",
+      "source_ip": "10.0.1.15",
+      "destination_ip": "10.0.2.50",
+      "alert_type": "Data Exfiltration",
+      "severity": "critical",
+      "description": "Large volume of data transferred to external destination",
+      "details": {
+        "bytes_transferred": "2.3 GB",
+        "duration": "4 minutes",
+        "destination": "external_ip: 198.51.100.89",
+        "protocol": "HTTPS"
+      }
+    },
+    {
+      "id": "alert_005",
+      "timestamp": "2025-11-14T14:15:22Z",
+      "source_ip": "192.168.1.105",
+      "destination_ip": "10.0.1.20",
+      "alert_type": "SQL Injection Attempt",
+      "severity": "high",
+      "description": "Potential SQL injection in web application",
+      "details": {
+        "payload": "' OR '1'='1' --",
+        "target_url": "/api/users",
+        "user_agent": "python-requests/2.31.0"
+      }
+    },
+    {
+      "id": "alert_006",
+      "timestamp": "2025-11-14T14:30:45Z",
+      "source_ip": "203.0.113.42",
+      "destination_ip": "10.0.1.15",
+      "alert_type": "Command Execution",
+      "severity": "critical",
+      "description": "Suspicious command execution pattern detected",
+      "details": {
+        "commands": ["whoami", "id", "cat /etc/passwd", "ls -la /home"],
+        "execution_rate": "12 commands/minute",
+        "persistence": "cron job created"
+      }
+    },
+    {
+      "id": "alert_007",
+      "timestamp": "2025-11-14T13:45:10Z",
+      "source_ip": "172.16.0.55",
+      "destination_ip": "10.0.1.30",
+      "alert_type": "Anomalous API Activity",
+      "severity": "medium",
+      "description": "Unusual API request pattern detected",
+      "details": {
+        "requests_per_second": 45,
+        "endpoints_hit": ["/api/users", "/api/credentials", "/api/config"],
+        "normal_baseline": "2 requests/second"
+      }
+    },
+    {
+      "id": "alert_008",
+      "timestamp": "2025-11-14T14:31:20Z",
+      "source_ip": "10.0.1.15",
+      "destination_ip": "10.0.3.100",
+      "alert_type": "Credential Harvesting",
+      "severity": "critical",
+      "description": "Access to credential storage detected",
+      "details": {
+        "files_accessed": ["/etc/shadow", "~/.ssh/id_rsa", "config/database.yml"],
+        "privilege_escalation": "sudo used",
+        "suspicious_processes": ["mimikatz-like behavior"]
+      }
+    }
+  ]

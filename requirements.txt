@@ -1,0 +1,77 @@
+# ============================================
+# SOC AI Assistant - Requirements
+# ============================================
+# Python 3.10+ required
+# Installation: pip install -r requirements.txt
+# ============================================
+
+# ===== Core Dependencies (Phase 1 - MVP) =====
+
+# HTTP requests pour communication avec API Ollama
+requests==2.31.0
+
+# Gestion de dates et timestamps
+python-dateutil==2.8.2
+
+# ===== Optional Dependencies (Development) =====
+
+# Pretty printing et debugging
+pprint==0.1
+
+# Colorisation output CLI (optionnel mais recommandé)
+colorama==0.4.6
+
+# Barre de progression pour batch processing
+tqdm==4.66.1
+
+# ===== Phase 2 - IDS Integration (à décommenter quand nécessaire) =====
+
+# # Flask pour interface web
+# flask==3.0.0
+# flask-cors==4.0.0
+
+# # SQLite database management
+# sqlalchemy==2.0.23
+
+# # YAML pour configuration
+# pyyaml==6.0.1
+
+# ===== Phase 3 - Advanced SOC (à décommenter quand nécessaire) =====
+
+# # Pandas pour analyse de données
+# pandas==2.1.4
+
+# # Visualisation
+# matplotlib==3.8.2
+# seaborn==0.13.0
+
+# # Graphiques interactifs
+# plotly==5.18.0
+
+# # Ansible SDK pour automation
+# ansible==9.1.0
+
+# # Prometheus client pour métriques
+# prometheus-client==0.19.0
+
+# ===== Testing & Quality (Development only) =====
+
+# # Testing framework
+# pytest==7.4.3
+# pytest-cov==4.1.0
+
+# # Code quality
+# pylint==3.0.3
+# black==23.12.1
+# flake8==7.0.0
+
+# # Type checking
+# mypy==1.8.0
+
+# ===== Security & Monitoring =====
+
+# # Sécurité des dépendances
+# safety==3.0.1
+
+# # Variables d'environnement
+# python-dotenv==1.0.0
