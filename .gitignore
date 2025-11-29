@@ -148,7 +148,7 @@ logs/*.txt
 logs/*.csv
 
 # Garder le dossier logs/ mais ignorer son contenu
-!logs/.gitkeep
+
 
 # Alertes temporaires ou de test
 data/temp_*.json

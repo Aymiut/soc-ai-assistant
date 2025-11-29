@@ -116,7 +116,7 @@ def main():
     print("=" * 60)
     
     # Chemin du fichier d'alertes (corrigé selon ton README)
-    alerts_file = "logs/sample_alerts.json"
+    alerts_file = "data/sample_alerts.json"
     
     # Chargement des alertes
     print(f"\n📂 Chargement des alertes depuis {alerts_file}...")
