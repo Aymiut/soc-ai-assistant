@@ -1,6 +1,7 @@
 import requests
 import json
 from datetime import datetime
+import mitre_database
 
 def build_prompt(alert):
     """Construit un prompt structuré pour l'analyse SOC"""
@@ -109,6 +110,29 @@ def save_results(results, output_file="logs/analysis_results.json"):
         print(f"❌ Erreur lors de la sauvegarde: {e}")
 
 
+def find_relevant_techniques(alert):
+    """
+    Trouve les techniques MITRE pertinentes pour une alerte
+    
+    Paramètres:
+        alert: dict contenant description, type, etc.
+    
+    Retourne:
+        list de technique_ids correspondants
+    """
+    description = alert.get("description", "")
+    alert_type = alert.get("alert_type", alert.get("type", ""))
+    
+    text = f"{description} {alert_type}".lower()
+    keywords = [word for word in text.split() if len(word) > 3]  # Filtre les petits mots
+    
+    technique_ids = mitre_database.search_by_multiple_indicators(keywords)
+    techniques = []
+    for tid in technique_ids:
+        techniques.append(mitre_database.get_technique(tid))
+    return techniques
+
+
 def main():
     """Fonction principale d'orchestration"""
     print("=" * 60)
@@ -123,7 +147,7 @@ def main():
     alerts = load_alerts_from_file(alerts_file)
     
     if not alerts:
-        print("❌ Aucune alerte à analyser.")
+        print("❌ Aucune alerte à analyser.")   
         return
     
     print(f"✅ {len(alerts)} alertes chargées avec succès\n")
@@ -154,3 +178,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+    test_alert = {
+        "description": "SSH brute force detected from external IP",
+        "alert_type": "authentication"
+    }
+    print(find_relevant_techniques(test_alert))

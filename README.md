@@ -37,8 +37,10 @@ Développer un système défensif qui :
 - ✅ Affichage de progression [x/total]
 - ✅ Sauvegarde automatique des résultats dans logs/
 - ✅ Statistiques de synthèse par sévérité
+- ✅ **Base de données MITRE ATT&CK** (11 techniques avec indicateurs et recommandations)
+- ✅ **Fonctions utilitaires MITRE** (recherche par ID, indicateur, tactique, sévérité)
 - 🔄 Détection de patterns d'attaque IA (en cours d'affinement)
-- 🔄 Recommandations basées sur MITRE ATT&CK (en cours d'affinement)
+- 🔄 Intégration de la base MITRE dans l'analyseur (à venir)
 - 🎯 **Coût : 0€** (100% local)
 
 ### Phase 2 : Intégration IDS réel
@@ -71,6 +73,8 @@ Développer un système défensif qui :
 │  [analyze_batch() - Boucle avec enumerate()]           │
 │           ↓                                             │
 │  [build_prompt() - Prompt adaptatif]                   │
+│           ↓                                             │
+│  [mitre_database.py - Base de connaissances MITRE]     │
 │           ↓                                             │
 │  [send_to_ollama() - API Ollama → Llama 3.2 local]     │
 │           ↓                                             │
@@ -168,8 +172,11 @@ python --version  # Doit afficher Python 3.10+
 Copier les fichiers suivants dans leurs emplacements respectifs :
 - `data/sample_alerts.json` → Alertes simulées (8 scénarios d'attaque)
 - `scripts/analyzer.py` → Script principal d'analyse
+- `scripts/mitre_database.py` → Base de données MITRE ATT&CK
 
 **Structure actuelle du code** :
+
+**`scripts/analyzer.py`** - Script principal d'analyse :
 ```python
 # Fonctions principales implémentées :
 build_prompt(alert)              # Construit un prompt adaptatif avec .get()
@@ -179,6 +186,34 @@ analyze_batch(alerts)            # Analyse multiple avec enumerate(start=1)
 save_results(results, path)      # Sauvegarde JSON horodatée
 main()                           # Orchestration complète + statistiques
 ```
+
+**`scripts/mitre_database.py`** - Base de données MITRE ATT&CK :
+```python
+# Base de données des techniques MITRE ATT&CK
+MITRE_TECHNIQUES                 # Dict contenant 11 techniques avec indicateurs et recommandations
+
+# Fonctions utilitaires :
+get_technique(technique_id)                    # Récupère une technique par ID
+search_by_indicator(keyword)                  # Recherche par mot-clé dans les indicateurs
+get_techniques_by_tactic(tactic)              # Filtre par tactique MITRE
+get_high_severity_techniques(threshold)       # Techniques haute sévérité (≥8)
+get_database_stats()                          # Statistiques de la base
+```
+
+**Techniques MITRE couvertes** :
+- **Reconnaissance** : T1046 (Network Service Discovery), T1595 (Active Scanning)
+- **Credential Access** : T1110 (Brute Force), T1078 (Valid Accounts), T1555 (Credentials from Password Stores)
+- **Lateral Movement** : T1021 (Remote Services)
+- **Exfiltration** : T1041 (Exfiltration Over C2 Channel), T1048 (Exfiltration Over Alternative Protocol)
+- **Execution** : T1059 (Command and Scripting Interpreter)
+- **Initial Access** : T1190 (Exploit Public-Facing Application)
+- **Command and Control** : T1071 (Application Layer Protocol)
+
+Chaque technique inclut :
+- Nom, tactique, description
+- Score de sévérité (1-10)
+- Liste d'indicateurs pour détection
+- Recommandations d'action immédiate
 
 #### 6. Lancement du système
 
@@ -215,6 +250,9 @@ python scripts/analyzer.py
 
 # Voir les résultats sauvegardés
 cat logs/analysis_results.json | python -m json.tool
+
+# Tester la base de données MITRE
+python scripts/mitre_database.py
 ```
 
 ## 🤔 Pourquoi exécuter le LLM en local ?
@@ -375,11 +413,24 @@ Total alertes analysées: 8
 - [x] Gestion robuste des erreurs (FileNotFoundError, JSONDecodeError)
 - [x] Tests réussis sur les 8 alertes simulées
 
+**Semaine 3 : Base de données MITRE ATT&CK**
+- [x] Création de `mitre_database.py` avec dictionnaire de techniques
+- [x] 11 techniques MITRE ATT&CK documentées (Reconnaissance, Credential Access, Lateral Movement, Exfiltration, Execution, Initial Access, C2)
+- [x] Fonction `get_technique()` pour récupération par ID
+- [x] Fonction `search_by_indicator()` pour recherche par mot-clé
+- [x] Fonction `get_techniques_by_tactic()` pour filtrage par tactique
+- [x] Fonction `get_high_severity_techniques()` pour techniques critiques
+- [x] Fonction `get_database_stats()` pour statistiques
+- [x] Script de test standalone (`if __name__ == "__main__"`)
+
 ### 🔄 En cours d'amélioration
 
-**Phase actuelle : Optimisation des analyses**
+**Phase actuelle : Intégration base MITRE**
+- [ ] Intégrer `mitre_database.py` dans `analyzer.py`
+- [ ] Utiliser la base MITRE pour enrichir les prompts
+- [ ] Auto-détection des techniques MITRE depuis les alertes
+- [ ] Génération automatique de recommandations depuis la base
 - [ ] Affiner la détection des patterns IA (scoring quantitatif)
-- [ ] Enrichir les recommandations MITRE ATT&CK
 - [ ] Ajouter scoring de confiance (0-100%)
 - [ ] Implémenter filtrage par sévérité
 - [ ] Ajouter métriques de performance (temps/alerte)
@@ -396,6 +447,9 @@ Total alertes analysées: 8
 ## 🚀 Roadmap détaillée
 
 ### Court terme (1-2 semaines)
+- [ ] **Intégration base MITRE dans l'analyseur** (priorité haute)
+- [ ] Auto-mapping alertes → techniques MITRE via indicateurs
+- [ ] Enrichissement automatique des prompts avec données MITRE
 - [ ] Scoring de confiance quantitatif
 - [ ] Filtrage par criticité/sévérité
 - [ ] Export rapport HTML avec styling
@@ -471,6 +525,35 @@ Total alertes analysées: 8
 - Temps moyen par alerte : ~3 secondes
 - Throughput : ~20 alertes/minute
 - Taux de réussite : 100% (8/8 alertes analysées)
+
+### Session 3 - Base de données MITRE ATT&CK (Date à venir)
+
+**Objectifs** : Créer une base de connaissances structurée pour enrichir l'analyse
+
+**Concepts maîtrisés** :
+1. **Structure de données hiérarchique** : Dict de techniques avec attributs multiples
+2. **Fonctions utilitaires modulaires** : Recherche, filtrage, statistiques
+3. **Documentation inline** : Docstrings pour toutes les fonctions
+4. **Test standalone** : Script exécutable pour validation
+
+**Code développé** :
+- `MITRE_TECHNIQUES` : Dictionnaire de 11 techniques avec indicateurs et recommandations
+- `get_technique()` : Récupération par ID avec gestion d'erreurs
+- `search_by_indicator()` : Recherche sémantique par mot-clé
+- `get_techniques_by_tactic()` : Filtrage par tactique MITRE
+- `get_high_severity_techniques()` : Identification des techniques critiques
+- `get_database_stats()` : Métriques de la base de données
+
+**Couverture MITRE** :
+- 11 techniques couvrant 7 tactiques principales
+- Sévérité moyenne : 8.0/10
+- 9 techniques haute sévérité (≥8)
+- Indicateurs et recommandations pour chaque technique
+
+**Prochaines étapes** :
+- Intégration dans `analyzer.py` pour enrichissement automatique
+- Auto-mapping alertes → techniques via matching d'indicateurs
+- Génération de recommandations depuis la base au lieu du LLM seul
 
 ---
 

@@ -307,6 +307,24 @@ def search_by_indicator(keyword: str) -> list:
     
     return matching_techniques
 
+def search_by_multiple_indicators(keywords: list) -> list:
+    """
+    Recherche les techniques MITRE par plusieurs mots-clés
+    
+    Args:
+        keywords: Liste de mots-clés à rechercher
+    
+    Returns:
+        Liste unique des IDs de techniques correspondantes
+    """
+    all_matches = set()  # Set pour éviter les doublons automatiquement
+    
+    for keyword in keywords:
+        matches = search_by_indicator(keyword)  # Réutilise la fonction existante
+        all_matches.update(matches)  # Ajoute au set
+    
+    return list(all_matches)
+
 
 def get_techniques_by_tactic(tactic: str) -> list:
     """
