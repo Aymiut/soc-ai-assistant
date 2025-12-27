@@ -277,12 +277,20 @@ def get_technique(technique_id: str) -> dict:
     Récupère une technique MITRE par son ID
     
     Args:
-        technique_id: ID de la technique (ex: "T1110")
+        technique_id: ID de la technique (ex: "T1046")
     
     Returns:
-        Dict avec les infos de la technique, ou dict vide si non trouvée
+        Dict avec les détails de la technique (ou None si non trouvée)
     """
-    return MITRE_TECHNIQUES.get(technique_id, {})
+    technique = MITRE_TECHNIQUES.get(technique_id)
+    
+    if technique:
+        # ⭐ AJOUT : Inclure l'ID dans le résultat
+        technique_with_id = technique.copy()  # Copie pour ne pas modifier l'original
+        technique_with_id['id'] = technique_id
+        return technique_with_id
+    
+    return None
 
 
 def search_by_indicator(keyword: str) -> list:
